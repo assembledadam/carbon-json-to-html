@@ -1,5 +1,5 @@
 {
-    "name": "candybanana/carbin-html-to-json",
+    "name": "candybanana/carbon-html-to-json",
     "license": "MIT",
     "description": "Carbon Editor JSON to HTML converter.",
     "keywords": ["carbon", "json", "html", "converter"],
