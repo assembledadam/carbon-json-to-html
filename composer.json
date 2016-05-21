@@ -1,0 +1,21 @@
+{
+    "name": "candybanana/carbin-html-to-json",
+    "license": "MIT",
+    "description": "Carbon Editor JSON to HTML converter.",
+    "keywords": ["carbon", "json", "html", "converter"],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.4"
+    },
+    "authors": [
+        {
+            "name": "Adam McCann",
+            "email": "adam@mccann.io"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "CarbonJsonToHtml": "src/"
+        }
+    }
+}
