@@ -3,7 +3,6 @@
     "license": "MIT",
     "description": "Carbon Editor JSON to HTML converter.",
     "keywords": ["carbon", "json", "html", "converter"],
-    "minimum-stability": "stable",
     "require": {
         "php": ">=5.4"
     },
