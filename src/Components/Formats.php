@@ -88,6 +88,8 @@ class Formats
      */
     public function render()
     {
+        $offset = 0;
+
         foreach ($this->formats as $format) {
 
             $attrs = $this->attributes($format->type, (! empty($format->attrs) ? $format->attrs : null));
@@ -95,8 +97,13 @@ class Formats
             $opening = '<' . $format->type . "$attrs>";
             $closing = '</' . $format->type . '>';
 
-            $this->text = substr_replace($this->text, $opening, $format->from, 0);
-            $this->text = substr_replace($this->text, $closing, $format->to + strlen($opening), 0);
+            $this->text = substr_replace($this->text, $opening, $format->from + $offset, 0);
+
+            $offset += strlen($opening);
+
+            $this->text = substr_replace($this->text, $closing, $format->to + $offset, 0);
+
+            $offset += strlen($closing);
         }
 
         // create a temporary document and load the plain html
