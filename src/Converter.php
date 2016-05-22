@@ -110,7 +110,7 @@ class Converter
 
         $this->convertRecursive($this->json->sections);
 
-        return $this->dom->saveHTML();
+        return trim($this->dom->saveHTML());
     }
 
     /**
