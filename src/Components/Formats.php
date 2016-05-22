@@ -90,7 +90,7 @@ class Formats
     {
         foreach ($this->formats as $format) {
 
-            $attrs = $this->attributes($format->attrs, $format->type);
+            $attrs = $this->attributes($format->type, (! empty($format->attrs) ? $format->attrs : null));
 
             $opening = '<' . $format->type . "$attrs>";
             $closing = '</' . $format->type . '>';
@@ -116,15 +116,13 @@ class Formats
     /**
      * Create a string of attributes to append to an html tag
      *
+     * @param  string
+     * @param  \stdClass
      * @return stirng
      */
-    public function attributes($attrs, $type)
+    public function attributes($type, stdClass $attrs = null)
     {
-        if (empty($attrs)) {
-            return '';
-        }
-
-        $attrs = get_object_vars($attrs);
+        $attrs = $attrs ? get_object_vars($attrs) : [];
 
         // do we have any custom attributes?
         if (! empty($this->customAttrs[$type])) {
