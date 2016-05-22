@@ -81,15 +81,6 @@ class Formats
         $this->dom         = $dom;
         $this->paragraph   = $paragraph;
         $this->customAttrs = $customAttrs; // sort this out in a constructor
-
-        // debugging
-        $this->customAttrs = [
-            'a' => function ($attrs, $text) {
-                return [
-                    'rel' => 'nofollow'
-                ];
-            }
-        ];
     }
 
     /**
