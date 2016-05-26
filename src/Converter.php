@@ -39,6 +39,9 @@ class Converter
         'Layout',
         'Paragraph',
         'Figure',
+        'ListComponent',
+        'EmbeddedComponent',
+        'HTMLComponent',
     ];
 
     /**
@@ -67,8 +70,9 @@ class Converter
             }
 
             $component = '\\Candybanana\\CarbonJsonToHtml\\Components\\' . ucfirst($componentName);
+            $component = new $component($config);
 
-            $this->addComponent($componentName, new $component($config));
+            $this->addComponent($component->getName(), $component);
         }
     }
 
@@ -95,7 +99,7 @@ class Converter
     {
         if (($this->json = json_decode($json)) === null) {
 
-            throw new Exception\NotTraversableException(
+            throw new Exceptions\NotTraversableException(
                 'The JSON provided is not valid'
             );
         }
@@ -103,7 +107,7 @@ class Converter
         // sections is *always* our first node
         if (! isset($this->json->sections)) {
 
-            throw new Exception\InvalidStructureException(
+            throw new Exceptions\InvalidStructureException(
                 'The JSON provided is not in a Carbon Editor format.'
             );
         }
@@ -126,7 +130,7 @@ class Converter
 
             if (empty($this->components[$component])) {
 
-                throw new Exception\InvalidStructureException(
+                throw new Exceptions\InvalidStructureException(
                     "The JSON contains the component '$component', but that isn't loaded."
                 );
             }

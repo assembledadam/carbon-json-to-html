@@ -5,7 +5,7 @@
  * @author  Adam McCann (@AssembledAdam)
  * @license MIT (see LICENSE file)
  */
-namespace Candybanana\CarbonJsonToHtml\Exception;
+namespace Candybanana\CarbonJsonToHtml\Exceptions;
 
 /**
  * InvalidStructureException

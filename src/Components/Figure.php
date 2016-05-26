@@ -14,7 +14,7 @@ use DOMElement;
 /**
  * Converter
  */
-class Figure implements ComponentInterface
+class Figure extends AbstractComponent implements ComponentInterface
 {
     /**
      * {@inheritdoc}

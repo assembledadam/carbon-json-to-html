@@ -14,7 +14,7 @@ use DOMElement;
 /**
  * Converter
  */
-class Section implements ComponentInterface
+class Section extends AbstractComponent implements ComponentInterface
 {
     /**
      * {@inheritdoc}

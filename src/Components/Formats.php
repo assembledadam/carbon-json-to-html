@@ -108,7 +108,7 @@ class Formats
 
         // create a temporary document and load the plain html
         $tmpDoc = new DOMDocument;
-        $tmpDoc->loadHTML($this->text);
+        $tmpDoc->loadHTML('<html><body>' . $this->text . '</body></html>');
 
         // import and attach the created nodes to the paragraph
         foreach ($tmpDoc->getElementsByTagName('body')->item(0)->childNodes as $node) {

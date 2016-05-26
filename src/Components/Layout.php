@@ -14,7 +14,7 @@ use DOMElement;
 /**
  * Converter
  */
-class Layout implements ComponentInterface
+class Layout extends AbstractComponent implements ComponentInterface
 {
     /**
      * {@inheritdoc}

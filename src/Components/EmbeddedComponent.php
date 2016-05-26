@@ -14,7 +14,7 @@ use DOMElement;
 /**
  * Converter
  */
-class Paragraph extends AbstractComponent implements ComponentInterface
+class EmbeddedComponent extends AbstractComponent implements ComponentInterface
 {
     /**
      * This components config: an array of custom attributes to apply to formatting tags within the text
@@ -38,19 +38,21 @@ class Paragraph extends AbstractComponent implements ComponentInterface
      */
     public function parse(stdClass $json, DOMDocument $dom, DOMElement $parentElement)
     {
-        $paragraph = $dom->createElement($json->paragraphType);
+        $figure = $dom->createElement('figure');
 
-        // apply formatting to text if applicable
-        if (! empty($json->formats)) {
+        // $temp = $dom->createElement('div')
 
-            $paragraph = (new Formats($json, $dom, $paragraph, $this->customAttrs))->render();
+        // // apply formatting to text if applicable
+        // if (! empty($json->formats)) {
 
-        } else {
+        //     $paragraph = (new Formats($json, $dom, $paragraph, $this->customAttrs))->render();
 
-            $paragraphText = $dom->createTextNode($json->text);
-            $paragraph->appendChild($paragraphText);
-        }
+        // } else {
 
-        return $parentElement->appendChild($paragraph);
+        //     $paragraphText = $dom->createTextNode($json->text);
+        //     $paragraph->appendChild($paragraphText);
+        // }
+
+        return $parentElement->appendChild($figure);
     }
 }
