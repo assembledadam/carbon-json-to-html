@@ -52,21 +52,5 @@ class HTMLComponent extends AbstractComponent implements ComponentInterface
         }
 
         return $parentElement->appendChild($container);
-
-        //
-        // $temp = $dom->createElement('div')
-
-        // // apply formatting to text if applicable
-        // if (! empty($json->formats)) {
-
-        //     $paragraph = (new Formats($json, $dom, $paragraph, $this->customAttrs))->render();
-
-        // } else {
-
-        //     $paragraphText = $dom->createTextNode($json->text);
-        //     $paragraph->appendChild($paragraphText);
-        // }
-
-        // return $parentElement->appendChild($figure);
     }
 }

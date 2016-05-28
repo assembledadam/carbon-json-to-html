@@ -45,9 +45,6 @@ class ListComponent extends AbstractComponent implements ComponentInterface
      */
     public function parse(stdClass $json, DOMDocument $dom, DOMElement $parentElement)
     {
-        dd($json);
-        dd($parentElement->nodeValue);
-
         $list = $dom->createElement($json->tagName);
 
         foreach ($json->components as $item) {
