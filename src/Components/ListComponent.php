@@ -45,25 +45,27 @@ class ListComponent extends AbstractComponent implements ComponentInterface
      */
     public function parse(stdClass $json, DOMDocument $dom, DOMElement $parentElement)
     {
-        $list = $dom->createElement($json->tagName);
+        $list = $dom->createElement(strtolower($json->tagName));
 
-        foreach ($json->components as $item) {
+        // foreach ($json->components as $item) {
 
-            $listItem = $dom->createElement($item->paragraphType);
+            // $listItem = $dom->createElement(strtolower($item->paragraphType));
 
             // apply formatting to text if applicable
-            if (! empty($item->formats)) {
+            // if (! empty($item->formats)) {
 
-                $listItem = (new Formats($item, $dom, $listItem, $this->customAttrs))->render();
+            //     $listItem = (new Formats($item, $dom, $listItem, $this->customAttrs))->render();
 
-            } else {
+            // } else {
 
-                $listItemText = $dom->createTextNode($item->text);
-                $listItem->appendChild($listItemText);
-            }
+            //     $listItemText = $dom->createTextNode($item->text);
+            //     $listItem->appendChild($listItemText);
+            // }
 
-            $list->appendChild($listItem);
-        }
+            // $list->appendChild($listItem);
+        // }
+
+        // dbg($parentElement->nodeValue);
 
         return $parentElement->appendChild($list);
     }

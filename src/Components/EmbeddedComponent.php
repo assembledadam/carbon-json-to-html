@@ -10,6 +10,7 @@ namespace Candybanana\CarbonJsonToHtml\Components;
 use stdClass;
 use DOMDocument;
 use DOMElement;
+use Candybanana\CarbonJsonToHtml\Exceptions;
 
 /**
  * Converter
@@ -17,11 +18,16 @@ use DOMElement;
 class EmbeddedComponent extends AbstractComponent implements ComponentInterface
 {
     /**
-     * This components config: an array of custom attributes to apply to formatting tags within the text
+     * This components config: contains handler for resoloving oEmbed URLs into HTML
+     *
+     * [
+     *     <name of provider> => <Closure($json)>,
+     *     <name of provider> => <Closure($json)>, (and so on...)
+     * ]
      *
      * @var array
      */
-    protected $customAttrs;
+    protected $config;
 
     /**
      * Component constructor
@@ -30,7 +36,7 @@ class EmbeddedComponent extends AbstractComponent implements ComponentInterface
      */
     public function __construct(array $config = null)
     {
-        $this->customAttrs = $config;
+        $this->config = $config;
     }
 
     /**
@@ -40,19 +46,75 @@ class EmbeddedComponent extends AbstractComponent implements ComponentInterface
     {
         $figure = $dom->createElement('figure');
 
-        // $temp = $dom->createElement('div')
+        if (empty($this->config[$json->provider])) {
 
-        // // apply formatting to text if applicable
-        // if (! empty($json->formats)) {
+            throw new Exceptions\InvalidStructureException("Provider '$json->provider' has no handler assigned.");
+        }
 
-        //     $paragraph = (new Formats($json, $dom, $paragraph, $this->customAttrs))->render();
+        $this->appendHtml($json, $dom, $figure);
 
-        // } else {
-
-        //     $paragraphText = $dom->createTextNode($json->text);
-        //     $paragraph->appendChild($paragraphText);
-        // }
+        $this->appendCaption($json, $dom, $figure);
 
         return $parentElement->appendChild($figure);
+    }
+
+    /**
+     * Append HTML to component
+     *
+     * @param  \stdClass
+     * @param  \DOMDocument
+     * @param  \DOMElement
+     */
+    protected function appendHtml(stdClass $json, DOMDocument $dom, DOMElement $figure)
+    {
+        $html = $this->config[$json->provider]($json);
+
+        // create a temporary document and load the plain html
+        $tmpDoc = new DOMDocument;
+        libxml_use_internal_errors(true); // for html5 tags
+        $tmpDoc->loadHTML("<html><body>$html</body></html>");
+        libxml_clear_errors();
+
+        // import and attach the created nodes to the paragraph
+        foreach ($tmpDoc->getElementsByTagName('body')->item(0)->childNodes as $node) {
+
+            $node = $dom->importNode($node, true);
+            $figure->appendChild($node);
+        }
+
+        // set figure classes
+        $class = 'embed-container';
+
+        // set type and serviceName as class for easy custom CSS styling (as Carbon does)
+        if (! empty($json->serviceName)) {
+            $class .= ' ' . $json->type . ' ' . $json->serviceName;
+        }
+
+        // if type is video and the html has an iframe, apply responsive fix class
+        if ($json->type == 'video' && strpos($html, '<iframe') !== false) {
+            $class .= ' responsive-video';
+        }
+
+        $figure->setAttribute('class', $class);
+    }
+
+    /**
+     * Append caption to component
+     *
+     * @param  \stdClass
+     * @param  \DOMDocument
+     * @param  \DOMElement
+     */
+    protected function appendCaption(stdClass $json, DOMDocument $dom, DOMElement $figure)
+    {
+        // add figcaption if we have one
+        if (! empty($json->caption)) {
+
+            $figcaption = $dom->createElement('figcaption');
+            $figcaptionText = $dom->createTextNode($json->caption);
+            $figcaption->appendChild($figcaptionText);
+
+            $figure->appendChild($figcaption);
+        }
     }
 }

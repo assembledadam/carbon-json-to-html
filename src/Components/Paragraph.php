@@ -38,7 +38,7 @@ class Paragraph extends AbstractComponent implements ComponentInterface
      */
     public function parse(stdClass $json, DOMDocument $dom, DOMElement $parentElement)
     {
-        $paragraph = $dom->createElement($json->paragraphType);
+        $paragraph = $dom->createElement(strtolower($json->paragraphType));
 
         // apply formatting to text if applicable
         if (! empty($json->formats)) {
