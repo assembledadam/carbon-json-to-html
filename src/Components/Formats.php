@@ -143,7 +143,7 @@ class Formats
 
         foreach ($attrs as $attr => $value) {
 
-            $string .= ' ' . $attr . '="' . $value . '"';
+            $string .= ' ' . $attr . '="' . htmlentities($value) . '"';
         }
 
         return $string;
