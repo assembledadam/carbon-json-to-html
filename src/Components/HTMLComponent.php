@@ -38,7 +38,7 @@ class HTMLComponent extends AbstractComponent implements ComponentInterface
      */
     public function parse(stdClass $json, DOMDocument $dom, DOMElement $parentElement)
     {
-        $container = $dom->createElement('div');
+        $container = $dom->createElement('figure');
 
         // create a temporary document and load the plain html
         $tmpDoc = new DOMDocument;
