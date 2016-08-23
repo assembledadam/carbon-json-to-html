@@ -93,7 +93,8 @@ class Converter
     /**
      * Perform the conversion
      *
-     * @return string
+     * @param  string  Input json to convert
+     * @return string  HTML
      */
     public function convert($json)
     {

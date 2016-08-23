@@ -24,13 +24,21 @@ class Paragraph extends AbstractComponent implements ComponentInterface
     protected $customAttrs;
 
     /**
+     * Trims empty paragraphs from the end of the output
+     *
+     * @var boolean
+     */
+    protected $trim;
+
+    /**
      * Component constructor
      *
      * @param array|null
      */
-    public function __construct(array $config = null)
+    public function __construct(array $config = null, $trim = true)
     {
         $this->customAttrs = $config;
+        $this->trim = $trim;
     }
 
     /**
@@ -38,6 +46,10 @@ class Paragraph extends AbstractComponent implements ComponentInterface
      */
     public function parse(stdClass $json, DOMDocument $dom, DOMElement $parentElement)
     {
+        if ($this->trim && empty($json->text)) {
+            return $parentElement;
+        }
+
         $paragraph = $dom->createElement(strtolower($json->paragraphType));
 
         // apply formatting to text if applicable
