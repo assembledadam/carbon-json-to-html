@@ -58,7 +58,7 @@ class Converter
      */
     public function __construct()
     {
-        $this->dom = new DOMDocument('1.0');
+        $this->dom = new DOMDocument('1.0', 'utf-8');
 
         // add default components
         foreach ($this->defaultComponents as $componentName => $config) {
@@ -114,7 +114,7 @@ class Converter
 
         $this->convertRecursive($this->json->sections);
 
-        return trim($this->dom->saveHTML());
+        return trim($this->dom->saveHTML($this->dom->documentElement));
     }
 
     /**
