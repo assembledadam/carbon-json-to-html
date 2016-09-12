@@ -42,7 +42,8 @@ class HTMLComponent extends AbstractComponent implements ComponentInterface
 
         // create a temporary document and load the plain html
         $tmpDoc = new DOMDocument;
-        $tmpDoc->loadHTML('<html><body>' . $json->html . '</body></html>');
+        $tmpDoc->loadHTML('<?xml encoding="UTF-8"><html><body>' . $json->html . '</body></html>');
+        $tmpDoc->encoding = 'UTF-8';
 
         // import and attach the created nodes to the paragraph
         foreach ($tmpDoc->getElementsByTagName('body')->item(0)->childNodes as $node) {

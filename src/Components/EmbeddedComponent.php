@@ -72,7 +72,8 @@ class EmbeddedComponent extends AbstractComponent implements ComponentInterface
         // create a temporary document and load the plain html
         $tmpDoc = new DOMDocument;
         libxml_use_internal_errors(true); // for html5 tags
-        $tmpDoc->loadHTML("<html><body>$html</body></html>");
+        $tmpDoc->loadHTML('<?xml encoding="UTF-8"><html><body>$html</body></html>');
+        $tmpDoc->encoding = 'UTF-8';
         libxml_clear_errors();
 
         // import and attach the created nodes to the paragraph
