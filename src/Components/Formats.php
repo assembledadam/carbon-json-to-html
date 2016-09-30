@@ -108,7 +108,7 @@ class Formats
 
         // create a temporary document and load the plain html
         $tmpDoc = new DOMDocument;
-        $tmpDoc->loadHTML('<?xml encoding="UTF-8"><html><body>' . $this->text . '</body></html>');
+        $tmpDoc->loadHTML('<?xml encoding="UTF-8"><html><body>' . str_replace('&', '&amp;', $this->text) . '</body></html>');
         $tmpDoc->encoding = 'UTF-8';
 
         // import and attach the created nodes to the paragraph
