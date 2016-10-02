@@ -10,6 +10,7 @@ namespace Candybanana\CarbonJsonToHtml\Components;
 use stdClass;
 use DOMDocument;
 use DOMElement;
+use voku\helper\UTF8;
 
 /**
  * Formats
@@ -97,11 +98,11 @@ class Formats
             $opening = '<' . $format->type . "$attrs>";
             $closing = '</' . $format->type . '>';
 
-            $this->text = substr_replace($this->text, $opening, $format->from + $offset, 0);
+            $this->text = UTF8::substr_replace($this->text, $opening, $format->from + $offset, 0);
 
             $offset += strlen($opening);
 
-            $this->text = substr_replace($this->text, $closing, $format->to + $offset, 0);
+            $this->text = UTF8::substr_replace($this->text, $closing, $format->to + $offset, 0);
 
             $offset += strlen($closing);
         }
