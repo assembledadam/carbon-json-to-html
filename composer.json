@@ -3,8 +3,10 @@
     "license": "MIT",
     "description": "Carbon Editor JSON to HTML converter.",
     "keywords": ["carbon", "json", "html", "converter"],
+
     "require": {
-        "php": ">=5.4"
+        "php": ">=5.4",
+        "voku/portable-utf8": "3.*"
     },
     "authors": [
         {
