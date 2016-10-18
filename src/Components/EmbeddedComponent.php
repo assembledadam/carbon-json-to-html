@@ -21,8 +21,17 @@ class EmbeddedComponent extends AbstractComponent implements ComponentInterface
      * This components config: contains handler for resoloving oEmbed URLs into HTML
      *
      * [
-     *     <name of provider> => <Closure($json)>,
-     *     <name of provider> => <Closure($json)>, (and so on...)
+     *     // for rendering oEmbeds and injecting the response directly into the output HTML
+     *     'providers' => [
+     *         <name of provider> => <Closure($json)>,
+     *         <name of provider> => <Closure($json)>, (and so on...)
+     *     ],
+     *
+     *     // for third party handling of the oEmbed - injects an <iframe> with the given URL into the HTML
+     *     'iframe' => 'https://your-oembed-provider/oembed'
+     *
+     *     // for third party handling of the oEmbed - injects AMP compatible iframe with the given URL into the HTML
+     *     'amp' => 'https://your-oembed-provider/oembed'
      * ]
      *
      * @var array
@@ -46,7 +55,9 @@ class EmbeddedComponent extends AbstractComponent implements ComponentInterface
     {
         $figure = $dom->createElement('figure');
 
-        if (empty($this->config[$json->provider])) {
+        if (empty($this->config['iframe']) &&
+            empty($this->config['amp']) &&
+            empty($this->config['providers'][$json->provider])) {
 
             throw new Exceptions\InvalidStructureException("Provider '$json->provider' has no handler assigned.");
         }
@@ -67,17 +78,36 @@ class EmbeddedComponent extends AbstractComponent implements ComponentInterface
      */
     protected function appendHtml(stdClass $json, DOMDocument $dom, DOMElement $figure)
     {
-        $html = $this->config[$json->provider]($json);
+        if (isset($this->config['providers'])) {
+
+            $this->injectOembedResponse($json, $dom, $figure);
+
+        } else if (isset($this->config['iframe'])) {
+
+            $this->injectIFrame($json, $dom, $figure);
+
+        } else {
+
+            $this->injectAMPFrame($json, $dom, $figure);
+        }
+    }
+
+    /**
+     * Append oEmbed response HTML directly into document
+     *
+     * @param  \stdClass
+     * @param  \DOMDocument
+     * @param  \DOMElement
+     */
+    protected function injectOEmbedResponse(stdClass $json, DOMDocument $dom, DOMElement $figure)
+    {
+        $html = $this->config['providers'][$json->provider]($json);
 
         // create a temporary document and load the plain html
-        $tmpDoc = new DOMDocument;
-        libxml_use_internal_errors(true); // for html5 tags
-        $tmpDoc->loadHTML('<?xml encoding="UTF-8"><html><body>' . $html . '</body></html>');
-        $tmpDoc->encoding = 'UTF-8';
-        libxml_clear_errors();
+        $domElement = $this->loadHtml($html);
 
         // import and attach the created nodes to the paragraph
-        foreach ($tmpDoc->getElementsByTagName('body')->item(0)->childNodes as $node) {
+        foreach ($domElement->childNodes as $node) {
 
             $node = $dom->importNode($node, true);
             $figure->appendChild($node);
@@ -97,6 +127,52 @@ class EmbeddedComponent extends AbstractComponent implements ComponentInterface
         }
 
         $figure->setAttribute('class', $class);
+    }
+
+    /**
+     * Append iframe for third party rendering of oEmbed
+     *
+     * @param  \stdClass
+     * @param  \DOMDocument
+     * @param  \DOMElement
+     */
+    protected function injectIFrame(stdClass $json, DOMDocument $dom, DOMElement $figure)
+    {
+        $url = $this->config['iframe'] . '?url=' . $json->url;
+
+        $iframe = $dom->createElement('iframe');
+        $iframe->setAttribute('src', $url);
+
+        $figure->appendChild($iframe);
+    }
+
+    /**
+     * Append AMP-compatible iframe for third party rendering of oEmbed
+     *
+     * @param  \stdClass
+     * @param  \DOMDocument
+     * @param  \DOMElement
+     */
+    protected function injectAMPFrame(stdClass $json, DOMDocument $dom, DOMElement $figure)
+    {
+        $url = $this->config['amp'] . '?plain=1&url=' . $json->url;
+
+        $iframe = $dom->createElement('amp-iframe');
+        $iframe->setAttribute('src', $url);
+        $iframe->setAttribute('width', 660);
+        $iframe->setAttribute('height', 372);
+        $iframe->setAttribute('sandbox', 'allow-scripts allow-same-origin');
+        $iframe->setAttribute('layout', 'responsive');
+
+        // add placeholder
+        $placeholder = $dom->createElement('div');
+        $placeholder->setAttribute('placeholder', 'placeholder');
+        $placeholder->setAttribute('class', 'placeholder placeholder--iframe');
+        $placeholderText = $dom->createTextNode('Loading... hold on!');
+        $placeholder->appendChild($placeholderText);
+        $iframe->appendChild($placeholder);
+
+        $figure->appendChild($iframe);
     }
 
     /**

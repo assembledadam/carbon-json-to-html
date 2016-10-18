@@ -52,6 +52,21 @@ class Converter
     protected $components = [];
 
     /**
+     * Array of custom HTML elements to insert at paragraph points (specified by key) - starts at 1
+     * Note this gets applied to every section.
+     *
+     * @var array
+     */
+    protected $customInserts = [];
+
+    /**
+     * Conter for parent paragraphs
+     *
+     * @var int
+     */
+    protected $parentParagraphCount = 1;
+
+    /**
      * Constructor
      *
      * @return string
@@ -94,10 +109,13 @@ class Converter
      * Perform the conversion
      *
      * @param  string  Input json to convert
+     * @param  array   Custom HTML to insert - array [{paragraph_num} => {Closure} (,{paragraph_num} => {Closure})]
      * @return string  HTML
      */
-    public function convert($json)
+    public function convert($json, $customInserts = null)
     {
+        $this->customInserts = $customInserts;
+
         if (($this->json = json_decode($json)) === null) {
 
             throw new Exceptions\NotTraversableException(
@@ -128,6 +146,15 @@ class Converter
         foreach ($json as $jsonNode) {
 
             $component = ucfirst($jsonNode->component);
+
+            if ($component == 'Paragraph' && $jsonNode->paragraphType == 'p') {
+
+                if (isset($this->customInserts[$this->parentParagraphCount])) {
+                    $parentElement = $this->customInserts[$this->parentParagraphCount]($this->dom, $parentElement);
+                }
+
+                $this->parentParagraphCount++;
+            }
 
             if (empty($this->components[$component])) {
 

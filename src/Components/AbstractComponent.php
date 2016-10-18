@@ -34,4 +34,22 @@ abstract class AbstractComponent
 
         return $this->name ?: substr($class, strrpos($class, '\\') + 1);
     }
+
+    /**
+     * Attempts to load given HTML into DOMDocument for parsing
+     *
+     * @param  string
+     * @return \DOMElement
+     */
+    protected function loadHtml($html)
+    {
+        // create a temporary document and load the plain html
+        $tmpDoc = new DOMDocument;
+        libxml_use_internal_errors(true); // for html5 tags
+        $tmpDoc->loadHTML('<?xml encoding="UTF-8"><html><body>' . $html . '</body></html>');
+        $tmpDoc->encoding = 'UTF-8';
+        libxml_clear_errors();
+
+        return $tmpDoc->getElementsByTagName('body')->item(0);
+    }
 }
