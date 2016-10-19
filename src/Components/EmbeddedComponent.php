@@ -160,8 +160,10 @@ class EmbeddedComponent extends AbstractComponent implements ComponentInterface
         $iframe = $dom->createElement('amp-iframe');
         $iframe->setAttribute('src', $url);
         $iframe->setAttribute('width', 660);
-        $iframe->setAttribute('height', 372);
-        $iframe->setAttribute('sandbox', 'allow-scripts allow-same-origin');
+        $iframe->setAttribute('height', 373);
+        $iframe->setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups');
+        $iframe->setAttribute('frameborder', 0);
+        $iframe->setAttribute('allowfullscreen', 'allowfullscreen');
         $iframe->setAttribute('layout', 'responsive');
 
         // add placeholder
