@@ -155,7 +155,7 @@ class EmbeddedComponent extends AbstractComponent implements ComponentInterface
      */
     protected function injectAMPFrame(stdClass $json, DOMDocument $dom, DOMElement $figure)
     {
-        $url = $this->config['amp'] . '?plain=1&url=' . $json->url;
+        $url = $this->config['amp'] . '?plain=1&ratio=1.778&url=' . $json->url;
 
         $iframe = $dom->createElement('amp-iframe');
         $iframe->setAttribute('src', $url);
