@@ -147,7 +147,8 @@ class Converter
 
             $component = ucfirst($jsonNode->component);
 
-            if ($component == 'Paragraph' && $jsonNode->paragraphType == 'p') {
+            // insert custom code in between valid paragraphs
+            if ($component == 'Paragraph' && $jsonNode->paragraphType == 'p' && strlen($jsonNode->text) > 120) {
 
                 if (isset($this->customInserts[$this->parentParagraphCount])) {
                     $parentElement = $this->customInserts[$this->parentParagraphCount]($this->dom, $parentElement);
