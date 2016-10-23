@@ -100,7 +100,7 @@ class HTMLComponent extends AbstractComponent implements ComponentInterface
             $class = 'embed-container html ';
 
             // detect any services
-            if ($detected = $this->detectType($domElement)) {
+            if ($domElement->hasChildNodes() && ($detected = $this->detectType($domElement))) {
 
                 list($service, $data) = $detected;
 
