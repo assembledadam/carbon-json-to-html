@@ -76,7 +76,7 @@ class HTMLComponent extends AbstractComponent implements ComponentInterface
     public function parse(stdClass $json, DOMDocument $dom, DOMElement $parentElement)
     {
         // create a temporary document and load the plain html
-        $domElement = $this->loadHtml($json->html);
+        $domElement = $this->loadHtml(trim($json->html));
 
         // whether tags should be AMP compliant
         if (isset($this->config['amp'])) {
@@ -100,7 +100,8 @@ class HTMLComponent extends AbstractComponent implements ComponentInterface
             $class = 'embed-container html ';
 
             // detect any services
-            if ($domElement->hasChildNodes() && ($detected = $this->detectType($domElement))) {
+            if ($domElement->hasChildNodes() &&
+                ($detected = $this->detectType($domElement))) {
 
                 list($service, $data) = $detected;
 
@@ -193,7 +194,9 @@ class HTMLComponent extends AbstractComponent implements ComponentInterface
     {
         $firstNode = $domElement->childNodes[0];
 
-        if ($firstNode->tagName == 'iframe' && $firstNode->hasAttribute('src')) {
+        if ($firstNode->nodeType == XML_ELEMENT_NODE &&
+            $firstNode->tagName == 'iframe' &&
+            $firstNode->hasAttribute('src')) {
 
             return [
                 'url' => $firstNode->getAttribute('src'),
@@ -212,7 +215,8 @@ class HTMLComponent extends AbstractComponent implements ComponentInterface
     {
         $firstNode = $domElement->childNodes[0];
 
-        if ($firstNode->tagName == 'blockquote' &&
+        if ($firstNode->nodeType == XML_ELEMENT_NODE &&
+            $firstNode->tagName == 'blockquote' &&
             $firstNode->hasAttribute('class') &&
             $firstNode->getAttribute('class') == 'twitter-tweet') {
 
