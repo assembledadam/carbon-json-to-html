@@ -50,9 +50,9 @@ abstract class AbstractComponent
         libxml_use_internal_errors(true); // for html5 tags
 
         // purify HTML to convert HTML chars in text nodes etc.
-        // $config = HTMLPurifier_Config::createDefault();
+        $config = HTMLPurifier_Config::createDefault();
 
-        // $html = (new HTMLPurifier($config))->purify($html);
+        $html = (new HTMLPurifier($config))->purify($html);
 
         $tmpDoc->loadHTML('<?xml encoding="UTF-8"><html><body>' . $html . '</body></html>');
         $tmpDoc->encoding = 'UTF-8';

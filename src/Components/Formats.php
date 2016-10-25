@@ -113,8 +113,8 @@ class Formats
         $tmpDoc = new DOMDocument;
 
         // purify HTML to convert HTML chars in text nodes etc.
-        // $config = HTMLPurifier_Config::createDefault();
-        // $this->text = (new HTMLPurifier($config))->purify($this->text);
+        $config = HTMLPurifier_Config::createDefault();
+        $this->text = (new HTMLPurifier($config))->purify($this->text);
 
         $tmpDoc->loadHTML('<?xml encoding="UTF-8"><html><body>' . $this->text . '</body></html>');
         $tmpDoc->encoding = 'UTF-8';
