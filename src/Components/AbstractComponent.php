@@ -10,6 +10,8 @@ namespace Candybanana\CarbonJsonToHtml\Components;
 use stdClass;
 use DOMDocument;
 use DOMElement;
+use HTMLPurifier;
+use HTMLPurifier_Config;
 
 /**
  * ComponentInterface
@@ -46,6 +48,12 @@ abstract class AbstractComponent
         // create a temporary document and load the plain html
         $tmpDoc = new DOMDocument;
         libxml_use_internal_errors(true); // for html5 tags
+
+        // purify HTML to convert HTML chars in text nodes etc.
+        $config = HTMLPurifier_Config::createDefault();
+
+        $html = (new HTMLPurifier($config))->purify($html);
+
         $tmpDoc->loadHTML('<?xml encoding="UTF-8"><html><body>' . $html . '</body></html>');
         $tmpDoc->encoding = 'UTF-8';
         libxml_clear_errors();

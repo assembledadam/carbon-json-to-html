@@ -11,6 +11,8 @@ use stdClass;
 use DOMDocument;
 use DOMElement;
 use voku\helper\UTF8;
+use HTMLPurifier;
+use HTMLPurifier_Config;
 
 /**
  * Formats
@@ -109,7 +111,13 @@ class Formats
 
         // create a temporary document and load the plain html
         $tmpDoc = new DOMDocument;
-        $tmpDoc->loadHTML('<?xml encoding="UTF-8"><html><body>' . str_replace('&', '&amp;', $this->text) . '</body></html>');
+
+        // purify HTML to convert HTML chars in text nodes etc.
+        $config = HTMLPurifier_Config::createDefault();
+
+        $this->text = (new HTMLPurifier($config))->purify($this->text);
+
+        $tmpDoc->loadHTML('<?xml encoding="UTF-8"><html><body>' . $this->text . '</body></html>');
         $tmpDoc->encoding = 'UTF-8';
 
         // import and attach the created nodes to the paragraph

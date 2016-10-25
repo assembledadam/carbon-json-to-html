@@ -6,7 +6,8 @@
 
     "require": {
         "php": ">=5.4",
-        "voku/portable-utf8": "3.*"
+        "voku/portable-utf8": "3.*",
+        "ezyang/htmlpurifier": "4.*"
     },
     "authors": [
         {
