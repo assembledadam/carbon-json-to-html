@@ -51,8 +51,16 @@ abstract class AbstractComponent
 
         // purify HTML to convert HTML chars in text nodes etc.
         $config = HTMLPurifier_Config::createDefault();
+        $config->set('HTML.Trusted', true);
+
+        $originalHtml = $html;
 
         $html = (new HTMLPurifier($config))->purify($html);
+
+        // @todo: here to safeguard over purification - remove once we've verified it works well.
+        if (empty($html)) {
+            $html = $originalHtml;
+        }
 
         $tmpDoc->loadHTML('<?xml encoding="UTF-8"><html><body>' . $html . '</body></html>');
         $tmpDoc->encoding = 'UTF-8';

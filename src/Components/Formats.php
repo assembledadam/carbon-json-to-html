@@ -114,6 +114,7 @@ class Formats
 
         // purify HTML to convert HTML chars in text nodes etc.
         $config = HTMLPurifier_Config::createDefault();
+        $config->set('HTML.Trusted', true);
         $this->text = (new HTMLPurifier($config))->purify($this->text);
 
         $tmpDoc->loadHTML('<?xml encoding="UTF-8"><html><body>' . $this->text . '</body></html>');
