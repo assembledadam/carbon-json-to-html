@@ -198,9 +198,18 @@ class HTMLComponent extends AbstractComponent implements ComponentInterface
             $firstNode->tagName == 'iframe' &&
             $firstNode->hasAttribute('src')) {
 
+            // if this a YouTube iFrame?
+            $url = $firstNode->getAttribute('src');
+
+            if (strpos($url, 'youtube.com') === false &&
+                strpos($url, 'youtu.be') === false) {
+
+                return;
+            }
+
             return [
-                'url' => $firstNode->getAttribute('src'),
-                'id'  => self::getYouTubeIdFromUrl($firstNode->getAttribute('src')),
+                'url' => $url,
+                'id'  => self::getYouTubeIdFromUrl($url),
             ];
         }
     }
@@ -260,6 +269,7 @@ class HTMLComponent extends AbstractComponent implements ComponentInterface
               )             # End path alternatives.
             )               # End host alternatives.
             ([\w-]{10,12})  # Allow 10-12 for 11 char youtube id.
+            \??(.*)         # Allow query string
             $%x';
 
         if (preg_match($pattern, $url, $matches)) {
