@@ -78,8 +78,6 @@ class HTMLComponent extends AbstractComponent implements ComponentInterface
         // create a temporary document and load the plain html
         $domElement = $this->loadHtml(trim($json->html));
 
-        dbg($json->html);
-
         // whether tags should be AMP compliant
         if (isset($this->config['amp'])) {
 
