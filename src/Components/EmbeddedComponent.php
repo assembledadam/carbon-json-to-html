@@ -104,7 +104,7 @@ class EmbeddedComponent extends AbstractComponent implements ComponentInterface
         $html = $this->config['providers'][$json->provider]($json);
 
         // create a temporary document and load the plain html
-        $domElement = $this->loadHtml($html);
+        $domElement = $this->loadHtml($html, false);
 
         // import and attach the created nodes to the paragraph
         foreach ($domElement->childNodes as $node) {

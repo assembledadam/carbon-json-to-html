@@ -76,7 +76,7 @@ class HTMLComponent extends AbstractComponent implements ComponentInterface
     public function parse(stdClass $json, DOMDocument $dom, DOMElement $parentElement)
     {
         // create a temporary document and load the plain html
-        $domElement = $this->loadHtml(trim($json->html));
+        $domElement = $this->loadHtml(trim($json->html), false);
 
         // whether tags should be AMP compliant
         if (isset($this->config['amp'])) {
