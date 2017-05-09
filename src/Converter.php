@@ -143,15 +143,31 @@ class Converter
      */
     protected function convertRecursive(array $json, DOMElement $parentElement = null)
     {
-        foreach ($json as $jsonNode) {
+        foreach ($json as $key => $jsonNode) {
 
             $component = ucfirst($jsonNode->component);
 
             // insert custom code in between valid paragraphs
-            if ($component == 'Paragraph' && $jsonNode->paragraphType == 'p' && strlen($jsonNode->text) > 120) {
+            if ($component == 'Paragraph' && $jsonNode->paragraphType == 'p') {
 
                 if (isset($this->customInserts[$this->parentParagraphCount])) {
-                    $parentElement = $this->customInserts[$this->parentParagraphCount]($this->dom, $parentElement);
+
+                    // add up all previous paragraphs
+                    $totalPrev = 0;
+                    for ($i = 0; $i <= $key; $i++) {
+                        if (! empty($json[$key - $i]->text)) {
+                            $totalPrev += strlen($json[$key - $i]->text);
+                        }
+                    }
+
+                    reset($this->customInserts);
+                    $firstKey = key($this->customInserts);
+
+                    // if current paragraph is long enough,
+                    // or if this is the first custom insert and there's been sufficient text previously
+                    if (strlen($jsonNode->text) > 120 || $this->parentParagraphCount == $firstKey && $totalPrev > 120) {
+                        $parentElement = $this->customInserts[$this->parentParagraphCount]($this->dom, $parentElement);
+                    }
                 }
 
                 $this->parentParagraphCount++;
@@ -170,5 +186,10 @@ class Converter
                 $this->convertRecursive($jsonNode->components, $element);
             }
         }
+    }
+
+    protected function insertCustomCode()
+    {
+
     }
 }
